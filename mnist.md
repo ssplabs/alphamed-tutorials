@@ -131,8 +131,9 @@ class ConvNet(nn.Module):
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
         return F.log_softmax(x, dim=-1)
+```
 
-
+```python
 def make_model(self) -> nn.Module:
     model = ConvNet()
     self.optimizer = torch.optim.SGD(model.parameters(),
@@ -141,9 +142,17 @@ def make_model(self) -> nn.Module:
     return model
 ```
 
-仔细分析代码会发现，其中使用了两个还未定义的对象属性：“self.learning\_rate”，“self.momentum”。这两个属性是在初始化对象的时候被赋值的，挂在 “self” 上的好处是，当我们在其它方法中需要访问它们的时候，它们随时都在。后面我们会详细介绍，目前可以暂时忽略这个问题。当然你也可以在 “make\_model” 方法中直接定义需要的任何变量。
+然后，我们来为模型搭配一个优化器，帮助我们自动处理梯度优化。
 
-如果你还需要一个优化器，也推荐在 “make\_model” 方法中定义，并把它挂载在 “self” 上。这样在训练的过程中就可以方便的使用这个优化器了。
+```python
+def make_optimizer(self) -> optim.Optimizer:
+    assert self.model, 'must initialize model first'
+    return optim.SGD(self.model.parameters(),
+                     lr=self.learning_rate,
+                     momentum=self.momentum)
+```
+
+仔细分析代码会发现，其中使用了两个还未定义的对象属性：“self.learning\_rate”，“self.momentum”。这两个属性是在初始化对象的时候被赋值的，挂在 “self” 上的好处是，当我们在其它方法中需要访问它们的时候，它们随时都在。后面我们会详细介绍，目前可以暂时忽略这个问题。当然你也可以在 “make\_model”，“make\_optimizer” 方法中直接定义需要的任何变量。
 
 ### 初始化数据加载器
 
@@ -216,10 +225,32 @@ def train(self) -> None:
 
 ### 定义测试逻辑
 
-为了验证模型的训练成果，我们需要在必要的时候对当前的最新参数做一些测试。同样的，测试的方式与本地测试也是一模一样的。只是在测试结束时，你需要将关心的测试结果返回，以便系统为你展示这些结果。除此之外，没有任何特殊之处。
+为了验证模型的训练成果，我们需要在必要的时候对当前的最新参数做一些测试。同样的，测试的方式与本地测试也是一模一样的。
+如果需要在训练的过程中记录一些评估指标，以便训练完成之后做一些分析，可以通过为 test 方法添加 register\_metrics 注解的方式注册指标列表，并在方法中的任何地方通过 append\_metrics\_item 方法添加指标记录信息。比如：
 
 ```python
-def test(self) -> Dict[str, Any]:
+@register_metrics(name='test_results', keys=['average_loss', 'accuracy', 'correct_rate'])
+def test(self):
+    ...
+```
+
+为 test 方法添加了一个名为 test\_results 的指标集合，其中包括了 average\_loss, accuracy, correct\_rate 三个指标项目。当需要召回 test\_results 指标集合的时候，可以通过 self.get\_metrics('test\_results') 获取该指标集合对象。下面的代码示例先获取到了 test\_results 指标集合，然后向其中添加了一条测试记录。在这次测试中，average\_loss 的值为 1.0，accuracy 的值为 0.801，correct\_rate 的值为 80.1。
+
+```python
+self.get_metrics('test_results').append_metrics_item({
+    'average_loss': 1.0,
+    'accuracy': 0.801,
+    'correct_rate': 80.1
+})
+```
+
+可以为 test 方法注册任意数量的指标集合，只需要依次添加 register\_metrics 注解即可。训练过程中每次执行 test 方法的时候，计算出需要记录的指标，将他们的值作为一条新的记录加入集合，即可追踪训练过程中感兴趣的状态和数值。当训练完成后，每一个指标集合会自动生成一个 CSV 表格文件，包含训练过程中的所有记录，以供下载后进一步分析。
+
+```python
+@register_metrics(name='timer', keys=['run_time'])
+@register_metrics(name='test_results', keys=['average_loss', 'accuracy', 'correct_rate'])
+def test(self):
+    start = time()
     self.model.eval()
     test_loss = 0
     correct = 0
@@ -241,11 +272,14 @@ def test(self) -> Dict[str, Any]:
     logger.info(
         f'Test set: Accuracy: {accuracy} ({correct_rate:.2f}%)'
     )
-    return {
-        'average loss': test_loss,
+
+    end = time()
+    self.get_metrics('timer').append_metrics_item({'run_time': end - start})
+    self.get_metrics('test_results').append_metrics_item({
+        'average_loss': test_loss,
         'accuracy': accuracy,
         'correct_rate': correct_rate
-    }
+    })
 ```
 
 好了，到此为止，所有必须的工作都已经做完了。下面的步骤是可选的，你可以根据自己的需要选择实现。当然，也可以全部跳过。
@@ -300,11 +334,11 @@ def __init__(self,
 def validate_context(self):
     super().validate_context()
     train_loader = self.make_train_dataloader()
-    assert train_loader and len(train_loader) > 0
-    logger.info(f'There are {len(train_loader)} samples for training.')
-    test_loader = self.make_train_dataloader()
-    assert test_loader and len(test_loader) > 0
-    logger.info(f'There are {len(test_loader)} samples for testing.')
+    assert train_loader and len(train_loader) > 0, 'failed to load train data'
+    logger.info(f'There are {len(train_loader.dataset)} samples for training.')
+    test_loader = self.make_test_dataloader()
+    assert test_loader and len(test_loader) > 0, 'failed to load test data'
+    logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
 ```
 
 ### 控制任务完成的条件
@@ -326,16 +360,18 @@ def is_task_finished(self) -> bool:
 
 ```python
 import os
-from typing import Any, Dict
+from time import time
+from typing import Dict
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
+from torch import optim
 from torch.utils.data import DataLoader
 
 from alphafed import logger
-from alphafed.fed_avg import FedAvgScheduler
+from alphafed.fed_avg import FedAvgScheduler, register_metrics
 
 
 class ConvNet(nn.Module):
@@ -357,7 +393,7 @@ class ConvNet(nn.Module):
         return F.log_softmax(x, dim=-1)
 
 
-class DemoScheduler(FedAvgScheduler):
+class DemoFedAvg(FedAvgScheduler):
 
     def __init__(self,
                  min_clients: int,
@@ -383,16 +419,21 @@ class DemoScheduler(FedAvgScheduler):
         self.learning_rate = learning_rate
         self.momentum = momentum
 
+        self._time_metrics = None
+
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.seed = 42
         torch.manual_seed(self.seed)
 
     def make_model(self) -> nn.Module:
         model = ConvNet()
-        self.optimizer = torch.optim.SGD(model.parameters(),
-                                         lr=self.learning_rate,
-                                         momentum=self.momentum)
         return model
+
+    def make_optimizer(self) -> optim.Optimizer:
+        assert self.model, 'must initialize model first'
+        return optim.SGD(self.model.parameters(),
+                         lr=self.learning_rate,
+                         momentum=self.momentum)
 
     def make_train_dataloader(self) -> DataLoader:
         return DataLoader(
@@ -433,11 +474,11 @@ class DemoScheduler(FedAvgScheduler):
     def validate_context(self):
         super().validate_context()
         train_loader = self.make_train_dataloader()
-        assert train_loader and len(train_loader) > 0
-        logger.info(f'There are {len(train_loader)} samples for training.')
-        test_loader = self.make_train_dataloader()
-        assert test_loader and len(test_loader) > 0
-        logger.info(f'There are {len(test_loader)} samples for testing.')
+        assert train_loader and len(train_loader) > 0, 'failed to load train data'
+        logger.info(f'There are {len(train_loader.dataset)} samples for training.')
+        test_loader = self.make_test_dataloader()
+        assert test_loader and len(test_loader) > 0, 'failed to load test data'
+        logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
 
     def train(self) -> None:
         self.model.train()
@@ -452,7 +493,10 @@ class DemoScheduler(FedAvgScheduler):
             loss.backward()
             self.optimizer.step()
 
-    def test(self) -> Dict[str, Any]:
+    @register_metrics(name='timer', keys=['run_time'])
+    @register_metrics(name='test_results', keys=['average_loss', 'accuracy', 'correct_rate'])
+    def test(self):
+        start = time()
         self.model.eval()
         test_loss = 0
         correct = 0
@@ -474,17 +518,251 @@ class DemoScheduler(FedAvgScheduler):
         logger.info(
             f'Test set: Accuracy: {accuracy} ({correct_rate:.2f}%)'
         )
-        return {
-            'average loss': test_loss,
+
+        end = time()
+        self.get_metrics('timer').append_metrics_item({'run_time': end - start})
+        self.get_metrics('test_results').append_metrics_item({
+            'average_loss': test_loss,
             'accuracy': accuracy,
             'correct_rate': correct_rate
-        }
+        })
 
-scheduler = DemoScheduler(min_clients=2,
-                          max_clients=3,
-                          name='demo_task',
-                          max_rounds=5,
-                          log_rounds=1,
-                          calculation_timeout=120)
+
+scheduler = DemoFedAvg(min_clients=2,
+                       max_clients=3,
+                       name='demo_fed_avg',
+                       max_rounds=5,
+                       merge_epochs=1,
+                       log_rounds=1,
+                       calculation_timeout=120)
+scheduler.launch_task(task_id='YOUR_TASK_ID')
+```
+
+# 创建一个 FedSGD 联邦学习任务
+
+FedSGD 可以被视为 FedAvg 算法中的一个特例。一般而言，它的训练速度和效果均落后于 FedAvg，因此并不适合应用在实际的业务场景中。但是在研究场景中其经常被用于提供一个基础的 baseline，因此我们提供了一个 FedSGD 的基础类，以方便在研究中使用。
+
+既然 FedSGD 算法是 FedAvg 算法中的一个特例，因此二者的大部分内容是相同的，所以这里只介绍二者存在差异的部分。
+
+### 初始化参数
+
+FedSGD 算法要求在一轮迭代中，必须包含所有的参与方，因此初始化参数中的 max\_clients 参数被移除了。所有在线的参与方都会参与每一轮的运算。但 min\_clients 参数依然有效。
+
+FedSGD 算法要求在每一轮迭代中，本地训练只能执行一个 epoch，因此 merge\_epochs 参数被移除了，它将永远为 1。
+
+下面的代码展示了如何定义一个 FedSGD 算法的实现。
+
+```python
+import os
+from time import time
+from typing import Dict
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torchvision
+from torch import optim
+from torch.utils.data import DataLoader
+
+from alphafed import logger
+from alphafed.fed_avg import FedSGDScheduler, register_metrics
+
+class DemoFedSGD(FedSGDScheduler):
+    ...
+
+
+scheduler = DemoFedSGD(min_clients=3,
+                       name='demo_fed_sgd',
+                       max_rounds=50,
+                       log_rounds=1,
+                       calculation_timeout=60)
+```
+
+## 控制训练集的 batch_size
+
+FedSGD 算法要求在一轮迭代中，所有的训练样本应当被放置在一个批次中。因此在提供训练数据加载器时，要将其 batch_size 设置为训练集样本总数量。框架会对此进行检查，如果发现不符合将会导致训练启动失败。下面是一个示例：
+
+```python
+def make_train_dataloader(self) -> DataLoader:
+    dataset = torchvision.datasets.MNIST(
+        os.path.join('root_path', 'data'),
+        train=True,
+        download=True,
+        transform=torchvision.transforms.Compose([
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize((0.1307,), (0.3081,))
+        ])
+    )
+    return DataLoader(dataset=dataset, batch_size=len(dataset), shuffle=True)
+```
+
+FedSGD 算法其余部分的实现方式和要求与 FedAvg 算法完全一致，请参考 FedAvg 算法部分的说明。下面是一个完整的 FedSGD 算法示例：
+
+```python
+import os
+from typing import Dict
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torchvision
+from torch.utils.data import DataLoader
+
+from alphafed import logger
+from alphafed.fed_avg import FedSGDScheduler
+
+
+class ConvNet(nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=10, kernel_size=5)
+        self.conv2 = nn.Conv2d(in_channels=10, out_channels=20, kernel_size=5)
+        self.conv2_drop = nn.Dropout2d()
+        self.fc1 = nn.Linear(in_features=320, out_features=50)
+        self.fc2 = nn.Linear(in_features=50, out_features=10)
+
+    def forward(self, x):
+        x = F.relu(F.max_pool2d(self.conv1(x), 2))
+        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(-1, 320)
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, training=self.training)
+        x = self.fc2(x)
+        return F.log_softmax(x, dim=-1)
+
+
+class DemoFedSGD(FedSGDScheduler):
+
+    def __init__(self,
+                 min_clients: int,
+                 name: str = None,
+                 max_rounds: int = 0,
+                 calculation_timeout: int = 300,
+                 log_rounds: int = 0,
+                 is_centralized: bool = True,
+                 batch_size: int = 64,
+                 learning_rate: float = 0.01,
+                 momentum: float = 0.5) -> None:
+        super().__init__(min_clients=min_clients,
+                         name=name,
+                         max_rounds=max_rounds,
+                         calculation_timeout=calculation_timeout,
+                         log_rounds=log_rounds,
+                         is_centralized=is_centralized)
+        self.batch_size = batch_size
+        self.learning_rate = learning_rate
+        self.momentum = momentum
+
+        self._time_metrics = None
+
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.seed = 42
+        torch.manual_seed(self.seed)
+
+    def make_model(self) -> nn.Module:
+        model = ConvNet()
+        return model
+
+    def make_optimizer(self) -> optim.Optimizer:
+        assert self.model, 'must initialize model first'
+        return optim.SGD(self.model.parameters(),
+                         lr=self.learning_rate,
+                         momentum=self.momentum)
+
+    def make_train_dataloader(self) -> DataLoader:
+        dataset = torchvision.datasets.MNIST(
+            os.path.join(self.name, 'data'),
+            train=True,
+            download=True,
+            transform=torchvision.transforms.Compose([
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize((0.1307,), (0.3081,))
+            ])
+        )
+        return DataLoader(dataset=dataset, batch_size=len(dataset), shuffle=True)
+
+    def make_test_dataloader(self) -> DataLoader:
+        return DataLoader(
+            torchvision.datasets.MNIST(
+                os.path.join(self.name, 'data'),
+                train=False,
+                download=True,
+                transform=torchvision.transforms.Compose([
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((0.1307,), (0.3081,))
+                ])
+            ),
+            batch_size=self.batch_size,
+            shuffle=False
+        )
+
+    def state_dict(self) -> Dict[str, torch.Tensor]:
+        return self.model.state_dict()
+
+    def load_state_dict(self, state_dict: Dict[str, torch.Tensor]):
+        self.model.load_state_dict(state_dict)
+
+    def validate_context(self):
+        super().validate_context()
+        train_loader = self.make_train_dataloader()
+        assert train_loader and len(train_loader) > 0, 'failed to load train data'
+        logger.info(f'There are {len(train_loader.dataset)} samples for training.')
+        test_loader = self.make_test_dataloader()
+        assert test_loader and len(test_loader) > 0, 'failed to load test data'
+        logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
+
+    def train(self) -> None:
+        self.model.train()
+        train_loader = self.make_train_dataloader()
+        for data, labels in train_loader:
+            data: torch.Tensor
+            labels: torch.Tensor
+            data, labels = data.to(self.device), labels.to(self.device)
+            self.optimizer.zero_grad()
+            output = self.model(data)
+            loss = F.nll_loss(output, labels)
+            loss.backward()
+            self.optimizer.step()
+
+    @register_metrics(name='timer', keys=['run_time'])
+    @register_metrics(name='test_results', keys=['average_loss', 'accuracy', 'correct_rate'])
+    def test(self):
+        start = time()
+        self.model.eval()
+        test_loss = 0
+        correct = 0
+        with torch.no_grad():
+            test_loader = self.make_test_dataloader()
+            for data, labels in test_loader:
+                data: torch.Tensor
+                labels: torch.Tensor
+                data, labels = data.to(self.device), labels.to(self.device)
+                output: torch.Tensor = self.model(data)
+                test_loss += F.nll_loss(output, labels, reduction='sum').item()
+                pred = output.max(1, keepdim=True)[1]
+                correct += pred.eq(labels.view_as(pred)).sum().item()
+
+        test_loss /= len(test_loader.dataset)
+        accuracy = correct / len(test_loader.dataset)
+        correct_rate = 100. * accuracy
+        logger.info(f'Test set: Average loss: {test_loss:.4f}')
+        logger.info(
+            f'Test set: Accuracy: {accuracy} ({correct_rate:.2f}%)'
+        )
+
+        end = time()
+        self.get_metrics('timer').append_metrics_item({'run_time': end - start})
+        self.get_metrics('test_results').append_metrics_item({
+            'average_loss': test_loss,
+            'accuracy': accuracy,
+            'correct_rate': correct_rate
+        })
+
+
+scheduler = DemoFedSGD(min_clients=2,
+                       name='demo_fed_sgd',
+                       max_rounds=5,
+                       log_rounds=1,
+                       calculation_timeout=120)
 scheduler.launch_task(task_id='YOUR_TASK_ID')
 ```
