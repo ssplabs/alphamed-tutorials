@@ -32,7 +32,7 @@ class DatasetVerify(object):
     def run(self) -> bool:
         """数据集的校验具体逻辑."""
         _logger.info(f"start dataset verification for task {self.task_id} on {self.current_node}")
-        root_dir = '/data/MNIST/'
+        root_dir = '/data/alphamed-federated-dataset/tutorials/MNIST/raw'
         return self._touch_data(root_dir) and self._load_data(root_dir)
 
     def _touch_data(self, root_dir: str) -> bool:
@@ -162,7 +162,7 @@ def make_optimizer(self) -> optim.Optimizer:
 def make_train_dataloader(self) -> DataLoader:
     return DataLoader(
         torchvision.datasets.MNIST(
-            os.path.join('root_path', 'data'),
+            '/data/alphamed-federated-dataset/tutorials/',
             train=True,
             download=True,
             transform=torchvision.transforms.Compose([
@@ -177,7 +177,7 @@ def make_train_dataloader(self) -> DataLoader:
 def make_test_dataloader(self) -> DataLoader:
     return DataLoader(
         torchvision.datasets.MNIST(
-            os.path.join('root_path', 'data'),
+            '/data/alphamed-federated-dataset/tutorials/',
             train=False,
             download=True,
             transform=torchvision.transforms.Compose([
@@ -438,7 +438,7 @@ class DemoFedAvg(FedAvgScheduler):
     def make_train_dataloader(self) -> DataLoader:
         return DataLoader(
             torchvision.datasets.MNIST(
-                os.path.join(self.name, 'data'),
+                '/data/alphamed-federated-dataset/tutorials/',
                 train=True,
                 download=True,
                 transform=torchvision.transforms.Compose([
@@ -453,7 +453,7 @@ class DemoFedAvg(FedAvgScheduler):
     def make_test_dataloader(self) -> DataLoader:
         return DataLoader(
             torchvision.datasets.MNIST(
-                os.path.join(self.name, 'data'),
+                '/data/alphamed-federated-dataset/tutorials/',
                 train=False,
                 download=True,
                 transform=torchvision.transforms.Compose([
