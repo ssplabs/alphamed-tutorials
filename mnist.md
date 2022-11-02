@@ -134,7 +134,7 @@ class ConvNet(nn.Module):
 ```
 
 ```python
-def make_model(self) -> nn.Module:
+def build_model(self) -> nn.Module:
     model = ConvNet()
     self.optimizer = torch.optim.SGD(model.parameters(),
                                      lr=self.learning_rate,
@@ -145,9 +145,8 @@ def make_model(self) -> nn.Module:
 然后，我们来为模型搭配一个优化器，帮助我们自动处理梯度优化。
 
 ```python
-def make_optimizer(self) -> optim.Optimizer:
-    assert self.model, 'must initialize model first'
-    return optim.SGD(self.model.parameters(),
+def build_optimizer(self, model: nn.Module) -> optim.Optimizer:
+    return optim.SGD(model.parameters(),
                      lr=self.learning_rate,
                      momentum=self.momentum)
 ```
@@ -159,7 +158,7 @@ def make_optimizer(self) -> optim.Optimizer:
 第二个任务是处理数据的加载，需要实现 “make\_train\_dataloader” 和 “make\_test\_dataloader” 两个方法，它们将分别返回训练数据和测试数据的数据加载器对象。同样的，这两个对象都是普通的 torch.utils.data.DataLoader 对象，我们应该对此很熟悉了。
 
 ```python
-def make_train_dataloader(self) -> DataLoader:
+def build_train_dataloader(self) -> DataLoader:
     return DataLoader(
         torchvision.datasets.MNIST(
             '/data/alphamed-federated-dataset/tutorials/',
@@ -174,7 +173,7 @@ def make_train_dataloader(self) -> DataLoader:
         shuffle=True
     )
 
-def make_test_dataloader(self) -> DataLoader:
+def build_test_dataloader(self) -> DataLoader:
     return DataLoader(
         torchvision.datasets.MNIST(
             '/data/alphamed-federated-dataset/tutorials/',
@@ -209,9 +208,9 @@ def load_state_dict(self, state_dict: Dict[str, torch.Tensor]):
 现在，可以定义我们的训练过程了。好消息是，与在本地执行训练的方式一模一样。
 
 ```python
-def train(self) -> None:
+def train_an_epoch(self) -> None:
     self.model.train()
-    train_loader = self.make_train_dataloader()
+    train_loader = self.build_train_dataloader()
     for data, labels in train_loader:
         data: torch.Tensor
         labels: torch.Tensor
@@ -255,7 +254,7 @@ def test(self):
     test_loss = 0
     correct = 0
     with torch.no_grad():
-        test_loader = self.make_test_dataloader()
+        test_loader = self.build_test_dataloader()
         for data, labels in test_loader:
             data: torch.Tensor
             labels: torch.Tensor
@@ -333,10 +332,10 @@ def __init__(self,
 ```python
 def validate_context(self):
     super().validate_context()
-    train_loader = self.make_train_dataloader()
+    train_loader = self.build_train_dataloader()
     assert train_loader and len(train_loader) > 0, 'failed to load train data'
     logger.info(f'There are {len(train_loader.dataset)} samples for training.')
-    test_loader = self.make_test_dataloader()
+    test_loader = self.build_test_dataloader()
     assert test_loader and len(test_loader) > 0, 'failed to load test data'
     logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
 ```
@@ -425,17 +424,16 @@ class DemoFedAvg(FedAvgScheduler):
         self.seed = 42
         torch.manual_seed(self.seed)
 
-    def make_model(self) -> nn.Module:
+    def build_model(self) -> nn.Module:
         model = ConvNet()
         return model
 
-    def make_optimizer(self) -> optim.Optimizer:
-        assert self.model, 'must initialize model first'
-        return optim.SGD(self.model.parameters(),
+    def build_optimizer(self, model: nn.Module) -> optim.Optimizer:
+        return optim.SGD(model.parameters(),
                          lr=self.learning_rate,
                          momentum=self.momentum)
 
-    def make_train_dataloader(self) -> DataLoader:
+    def build_train_dataloader(self) -> DataLoader:
         return DataLoader(
             torchvision.datasets.MNIST(
                 '/data/alphamed-federated-dataset/tutorials/',
@@ -450,7 +448,7 @@ class DemoFedAvg(FedAvgScheduler):
             shuffle=True
         )
 
-    def make_test_dataloader(self) -> DataLoader:
+    def build_test_dataloader(self) -> DataLoader:
         return DataLoader(
             torchvision.datasets.MNIST(
                 '/data/alphamed-federated-dataset/tutorials/',
@@ -473,16 +471,16 @@ class DemoFedAvg(FedAvgScheduler):
 
     def validate_context(self):
         super().validate_context()
-        train_loader = self.make_train_dataloader()
+        train_loader = self.build_train_dataloader()
         assert train_loader and len(train_loader) > 0, 'failed to load train data'
         logger.info(f'There are {len(train_loader.dataset)} samples for training.')
-        test_loader = self.make_test_dataloader()
+        test_loader = self.build_test_dataloader()
         assert test_loader and len(test_loader) > 0, 'failed to load test data'
         logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
 
-    def train(self) -> None:
+    def train_an_epoch(self) -> None:
         self.model.train()
-        train_loader = self.make_train_dataloader()
+        train_loader = self.build_train_dataloader()
         for data, labels in train_loader:
             data: torch.Tensor
             labels: torch.Tensor
@@ -501,7 +499,7 @@ class DemoFedAvg(FedAvgScheduler):
         test_loss = 0
         correct = 0
         with torch.no_grad():
-            test_loader = self.make_test_dataloader()
+            test_loader = self.build_test_dataloader()
             for data, labels in test_loader:
                 data: torch.Tensor
                 labels: torch.Tensor
@@ -583,7 +581,7 @@ scheduler = DemoFedSGD(min_clients=3,
 FedSGD 算法要求在一轮迭代中，所有的训练样本应当被放置在一个批次中。因此在提供训练数据加载器时，要将其 batch_size 设置为训练集样本总数量。框架会对此进行检查，如果发现不符合将会导致训练启动失败。下面是一个示例：
 
 ```python
-def make_train_dataloader(self) -> DataLoader:
+def build_train_dataloader(self) -> DataLoader:
     dataset = torchvision.datasets.MNIST(
         os.path.join('root_path', 'data'),
         train=True,
@@ -659,17 +657,16 @@ class DemoFedSGD(FedSGDScheduler):
         self.seed = 42
         torch.manual_seed(self.seed)
 
-    def make_model(self) -> nn.Module:
+    def build_model(self) -> nn.Module:
         model = ConvNet()
         return model
 
-    def make_optimizer(self) -> optim.Optimizer:
-        assert self.model, 'must initialize model first'
-        return optim.SGD(self.model.parameters(),
+    def build_optimizer(self, model: nn.Module) -> optim.Optimizer:
+        return optim.SGD(model.parameters(),
                          lr=self.learning_rate,
                          momentum=self.momentum)
 
-    def make_train_dataloader(self) -> DataLoader:
+    def build_train_dataloader(self) -> DataLoader:
         dataset = torchvision.datasets.MNIST(
             os.path.join(self.name, 'data'),
             train=True,
@@ -681,7 +678,7 @@ class DemoFedSGD(FedSGDScheduler):
         )
         return DataLoader(dataset=dataset, batch_size=len(dataset), shuffle=True)
 
-    def make_test_dataloader(self) -> DataLoader:
+    def build_test_dataloader(self) -> DataLoader:
         return DataLoader(
             torchvision.datasets.MNIST(
                 os.path.join(self.name, 'data'),
@@ -704,16 +701,16 @@ class DemoFedSGD(FedSGDScheduler):
 
     def validate_context(self):
         super().validate_context()
-        train_loader = self.make_train_dataloader()
+        train_loader = self.build_train_dataloader()
         assert train_loader and len(train_loader) > 0, 'failed to load train data'
         logger.info(f'There are {len(train_loader.dataset)} samples for training.')
-        test_loader = self.make_test_dataloader()
+        test_loader = self.build_test_dataloader()
         assert test_loader and len(test_loader) > 0, 'failed to load test data'
         logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
 
-    def train(self) -> None:
+    def train_an_epoch(self) -> None:
         self.model.train()
-        train_loader = self.make_train_dataloader()
+        train_loader = self.build_train_dataloader()
         for data, labels in train_loader:
             data: torch.Tensor
             labels: torch.Tensor
@@ -732,7 +729,7 @@ class DemoFedSGD(FedSGDScheduler):
         test_loss = 0
         correct = 0
         with torch.no_grad():
-            test_loader = self.make_test_dataloader()
+            test_loader = self.build_test_dataloader()
             for data, labels in test_loader:
                 data: torch.Tensor
                 labels: torch.Tensor
