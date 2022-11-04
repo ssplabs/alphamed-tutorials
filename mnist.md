@@ -136,9 +136,6 @@ class ConvNet(nn.Module):
 ```python
 def build_model(self) -> nn.Module:
     model = ConvNet()
-    self.optimizer = torch.optim.SGD(model.parameters(),
-                                     lr=self.learning_rate,
-                                     momentum=self.momentum)
     return model
 ```
 
@@ -151,7 +148,7 @@ def build_optimizer(self, model: nn.Module) -> optim.Optimizer:
                      momentum=self.momentum)
 ```
 
-仔细分析代码会发现，其中使用了两个还未定义的对象属性：“self.learning\_rate”，“self.momentum”。这两个属性是在初始化对象的时候被赋值的，挂在 “self” 上的好处是，当我们在其它方法中需要访问它们的时候，它们随时都在。后面我们会详细介绍，目前可以暂时忽略这个问题。当然你也可以在 “make\_model”，“make\_optimizer” 方法中直接定义需要的任何变量。
+接口参数传入的 model 对象，平台会自动传入接下来训练的过程中使用的模型对象，因此可以直接使用。仔细分析代码会发现，其中使用了两个还未定义的对象属性：“self.learning\_rate”，“self.momentum”。这两个属性是在初始化对象的时候被赋值的，挂在 “self” 上的好处是，当我们在其它方法中需要访问它们的时候，它们随时都在。后面我们会详细介绍，目前可以暂时忽略这个问题。当然你也可以在 “make\_model”，“make\_optimizer” 方法中直接定义需要的任何变量。
 
 ### 初始化数据加载器
 
@@ -210,8 +207,7 @@ def load_state_dict(self, state_dict: Dict[str, torch.Tensor]):
 ```python
 def train_an_epoch(self) -> None:
     self.model.train()
-    train_loader = self.build_train_dataloader()
-    for data, labels in train_loader:
+    for data, labels in self.train_loader:
         data: torch.Tensor
         labels: torch.Tensor
         data, labels = data.to(self.device), labels.to(self.device)
@@ -254,8 +250,7 @@ def test(self):
     test_loss = 0
     correct = 0
     with torch.no_grad():
-        test_loader = self.build_test_dataloader()
-        for data, labels in test_loader:
+        for data, labels in self.test_loader:
             data: torch.Tensor
             labels: torch.Tensor
             data, labels = data.to(self.device), labels.to(self.device)
@@ -332,12 +327,10 @@ def __init__(self,
 ```python
 def validate_context(self):
     super().validate_context()
-    train_loader = self.build_train_dataloader()
-    assert train_loader and len(train_loader) > 0, 'failed to load train data'
-    logger.info(f'There are {len(train_loader.dataset)} samples for training.')
-    test_loader = self.build_test_dataloader()
-    assert test_loader and len(test_loader) > 0, 'failed to load test data'
-    logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
+    assert self.train_loader and len(self.train_loader) > 0, 'failed to load train data'
+    logger.info(f'There are {len(self.train_loader.dataset)} samples for training.')
+    assert self.test_loader and len(self.test_loader) > 0, 'failed to load test data'
+    logger.info(f'There are {len(self.test_loader.dataset)} samples for testing.')
 ```
 
 ### 控制任务完成的条件
@@ -471,17 +464,14 @@ class DemoFedAvg(FedAvgScheduler):
 
     def validate_context(self):
         super().validate_context()
-        train_loader = self.build_train_dataloader()
-        assert train_loader and len(train_loader) > 0, 'failed to load train data'
-        logger.info(f'There are {len(train_loader.dataset)} samples for training.')
-        test_loader = self.build_test_dataloader()
-        assert test_loader and len(test_loader) > 0, 'failed to load test data'
-        logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
+        assert self.train_loader and len(self.train_loader) > 0, 'failed to load train data'
+        logger.info(f'There are {len(self.train_loader.dataset)} samples for training.')
+        assert self.test_loader and len(self.test_loader) > 0, 'failed to load test data'
+        logger.info(f'There are {len(self.test_loader.dataset)} samples for testing.')
 
     def train_an_epoch(self) -> None:
         self.model.train()
-        train_loader = self.build_train_dataloader()
-        for data, labels in train_loader:
+        for data, labels in self.train_loader:
             data: torch.Tensor
             labels: torch.Tensor
             data, labels = data.to(self.device), labels.to(self.device)
@@ -499,8 +489,7 @@ class DemoFedAvg(FedAvgScheduler):
         test_loss = 0
         correct = 0
         with torch.no_grad():
-            test_loader = self.build_test_dataloader()
-            for data, labels in test_loader:
+            for data, labels in self.test_loader:
                 data: torch.Tensor
                 labels: torch.Tensor
                 data, labels = data.to(self.device), labels.to(self.device)
@@ -701,17 +690,14 @@ class DemoFedSGD(FedSGDScheduler):
 
     def validate_context(self):
         super().validate_context()
-        train_loader = self.build_train_dataloader()
-        assert train_loader and len(train_loader) > 0, 'failed to load train data'
-        logger.info(f'There are {len(train_loader.dataset)} samples for training.')
-        test_loader = self.build_test_dataloader()
-        assert test_loader and len(test_loader) > 0, 'failed to load test data'
-        logger.info(f'There are {len(test_loader.dataset)} samples for testing.')
+        assert self.train_loader and len(self.train_loader) > 0, 'failed to load train data'
+        logger.info(f'There are {len(self.train_loader.dataset)} samples for training.')
+        assert self.test_loader and len(self.test_loader) > 0, 'failed to load test data'
+        logger.info(f'There are {len(self.test_loader.dataset)} samples for testing.')
 
     def train_an_epoch(self) -> None:
         self.model.train()
-        train_loader = self.build_train_dataloader()
-        for data, labels in train_loader:
+        for data, labels in self.train_loader:
             data: torch.Tensor
             labels: torch.Tensor
             data, labels = data.to(self.device), labels.to(self.device)
@@ -729,8 +715,7 @@ class DemoFedSGD(FedSGDScheduler):
         test_loss = 0
         correct = 0
         with torch.no_grad():
-            test_loader = self.build_test_dataloader()
-            for data, labels in test_loader:
+            for data, labels in self.test_loader:
                 data: torch.Tensor
                 labels: torch.Tensor
                 data, labels = data.to(self.device), labels.to(self.device)
