@@ -114,6 +114,12 @@ FedAvgScheduler 接收一些初始化参数，一些主要的参数说明如下�
 第一个任务是实现 “make\_model” 方法，它将返回任务计算时使用的模型对象。幸运的是，这就是个普通的 torch.nn.Module 对象。
 
 ```python
+"""in net.py"""
+
+from torch import nn
+import torch.nn.functional as F
+
+
 class ConvNet(nn.Module):
     def __init__(self) -> None:
         super().__init__()
@@ -133,7 +139,11 @@ class ConvNet(nn.Module):
         return F.log_softmax(x, dim=-1)
 ```
 
+你可以在 notebook 中定义网络，并将定义网络的代码与 DemoScheduler 的代码放在同一个 notebook cell 中启动任务；也可以在单独的文件中定义网络及相关组件，并将所有依赖的代码文件**放置在控制任务启动的 notebook 文件的相同目录下**。比如可以将 ConvNet 的定义代码放置在 notebook 启动文件同目录下的 net.py 文件中, 并通过 import 机制加载网络。如果依赖的文件较多，需要一定的目录结构以方便维护，平台也支持任意层次的目录结构。但需要确保**目录的根节点必须是控制任务启动的 notebook 文件所在的目录**。
+
 ```python
+from net import ConvNet
+
 def build_model(self) -> nn.Module:
     model = ConvNet()
     return model
@@ -343,6 +353,24 @@ def is_task_finished(self) -> bool:
     return self._is_reach_max_rounds()
 ```
 
+### 在运行时动态安装依赖的第三方模块
+
+如果你的代码运行时依赖于平台未安装的第三方模块，你可以在控制任务启动的 notebook 文件的相同目录下添加一个 `requirements.txt` 文件，并在文件中罗列出所有需要安装的依赖模块。这里要注意文件名必须是 `requirements.txt`，避免拼写错误。
+
+```
+# in requirements.txt
+pytz==2021.1
+diskcache
+xmltodict>=0.13
+```
+
+本示例中使用的文件的目录结构如下：
+```
+├── demo.ipynb
+├── net.py
+└── requirements.txt
+```
+
 # 启动任务
 
 至此，所有你需要了解的知识都已经介绍完了。在真正启动我们的第一个任务之前，让我们先把前面那些零散的方法实现整理一下，汇总到一起。然后，你还需要在任务管理页面中查看一下当前任务的 ID。任务 ID 可以在 Playgroud 页面找到并复制，如下图：
@@ -365,24 +393,7 @@ from torch.utils.data import DataLoader
 from alphafed import logger
 from alphafed.fed_avg import FedAvgScheduler, register_metrics
 
-
-class ConvNet(nn.Module):
-    def __init__(self) -> None:
-        super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=10, kernel_size=5)
-        self.conv2 = nn.Conv2d(in_channels=10, out_channels=20, kernel_size=5)
-        self.conv2_drop = nn.Dropout2d()
-        self.fc1 = nn.Linear(in_features=320, out_features=50)
-        self.fc2 = nn.Linear(in_features=50, out_features=10)
-
-    def forward(self, x):
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
-        x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
-        x = self.fc2(x)
-        return F.log_softmax(x, dim=-1)
+from net import ConvNet
 
 
 class DemoFedAvg(FedAvgScheduler):
