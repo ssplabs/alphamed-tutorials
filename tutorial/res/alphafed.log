@@ -1,0 +1,37 @@
+2023-02-03 18:36:08,037|DEBUG|connectionpool|_new_conn|1003:
+Starting new HTTPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:36:08,322|DEBUG|connectionpool|_make_request|456:
+https://alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443 "GET /task/5df72f4a97ef4e358e7c610bc2bdfa14/share/cbd1f67ca0984da03a8827dd02785d39.files HTTP/1.1" 200 22
+2023-02-03 18:36:08,401|DEBUG|connectionpool|_new_conn|1003:
+Starting new HTTPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:36:08,848|DEBUG|connectionpool|_make_request|456:
+https://alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443 "GET /task/5df72f4a97ef4e358e7c610bc2bdfa14/share/cbd1f67ca0984da03a8827dd02785d39.files HTTP/1.1" 200 22
+2023-02-03 18:36:09,798|DEBUG|connectionpool|_new_conn|1003:
+Starting new HTTPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:36:09,822|DEBUG|connectionpool|_new_conn|1003:
+Starting new HTTPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:36:10,371|DEBUG|connectionpool|_make_request|456:
+https://alphamed-share-1309103037.cos.ap-beijing.myqclou2023-02-03 18:52:31,901|DEBUG|connectionpool|_new_conn|1003:
+Starting new HTTPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:52:32,263|DEBUG|connectionpool|_make_request|456:
+https://alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443 "GET /task/5df72f4a97ef4e358e7c610bc2bdfa14/share/cbd1f67ca0984da03a2023-02-03 18:52:33,596|DEBUG|connecti2023-02-03 18:52:35,426|DEBUG|connectionpool|_new_conn|1003:
+Starting new HTTPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:52:35,829|DEBUG|connectionpool|_make_request|456:
+https://alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443 "GET /task/5df72f4a97ef4e358e7c610bc2bdfa14/share/cbd1f67ca0984da03a8827dd02785d39.files HTTP/1.1" 200 22
+2023-02-03 18:52:35,909|DEBUG|connectionpool|_new_conn|228:
+Starting new HTTP connection (1): federated-service:9080
+2023-02-03 18:52:36,014|DEBUG|connectionpool|_make_request|456:
+http://federated-service:9080 "POST /fed-service/api/v2/file/upload?task_id=5df72f4a97ef4e358e7c610bc2bdfa14&durable=False HTTP/1.1" 200 265
+2023-02-03 18:52:37,029|DEBUG|shared_file_data_channel|_do_send_stream|136:
+Sending data stream complete.
+TPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:52:36,387|DEBUG|connectionpool|_new_conn|1003:
+Starting new HTTPS connection (1): alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443
+2023-02-03 18:52:36,664|DEBUG|connectionpool|_make_request|456:
+https://alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443 "GET /task/5df72f4a97ef4e358e7c610bc2bdfa14/share/cbd1f67ca0984da03a8827dd02785d39.files HTTP/1.1" 200 22
+2023-02-03 18:52:36,761|DEBUG|connectionpool|_make_request|456:
+https://alphamed-share-1309103037.cos.ap-beijing.myqcloud.com:443 "GET /task/5df72f4a97ef4e358e7c610bc2bdfa14/share/cbd1f67ca0984da03a8827dd02785d39.files HTTP/1.1" 200 22
+-03 18:52:35,849|DEBUG|connectionpool|_make_request|456:
+http://federated-service:9080 "POST /fed-service/api/v2/file/upload?task_id=5df72f4a97ef4e358e7c610bc2bdfa14&durable=False HTTP/1.1" 200 265
+2023-02-03 18:52:36,865|DEBUG|shared_file_data_channel|_do_send_stream|136:
+Sending data stream complete.

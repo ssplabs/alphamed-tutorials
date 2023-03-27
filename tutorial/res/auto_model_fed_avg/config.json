@@ -1,0 +1,27 @@
+{
+    "entry_file": "auto_fed_avg.py",
+    "entry_module": null,
+    "entry_class": "AutoResNetFedAvg",
+    "param_file": "resnet18.pth",
+    "id2label": {
+        "0": "AKIEC",
+        "1": "BCC",
+        "2": "BKL",
+        "3": "DF",
+        "4": "MEL",
+        "5": "NV",
+        "6": "VASC"
+    },
+    "label2id": {
+        "AKIEC": 0,
+        "BCC": 1,
+        "BKL": 2,
+        "DF": 3,
+        "MEL": 4,
+        "NV": 5,
+        "VASC": 6
+    },
+    "learning_rate": 1e-4,
+    "epochs": 1,
+    "batch_size": 16
+}
