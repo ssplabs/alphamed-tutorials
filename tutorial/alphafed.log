@@ -1,0 +1,300 @@
+2023-01-13 15:34:43,389|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 15:34:43,390|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 15:34:43,391|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 15:34:44,155|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 15:34:44,156|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 15:34:44,158|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 15:43:20,913|WARNING|auto_model|push_log|180:
+Failed to push a message because context is not initialized.
+2023-01-13 16:00:38,824|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:00:38,929|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:00:38,930|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:00:39,052|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:00:39,053|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:00:39,061|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:00:50,772|WARNING|auto_model|push_log|180:
+Failed to push a message because context is not initialized.
+2023-01-13 16:03:05,849|INFO|auto|_run_test|400:
+Testing Average Loss: 1.6372
+2023-01-13 16:03:05,868|INFO|auto|_run_test|401:
+Testing Correct Rate: 40.34
+2023-01-13 16:04:25,184|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:04:25,189|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:04:25,190|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:04:25,225|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:04:25,226|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:04:25,230|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:04:32,417|WARNING|auto_model|push_log|180:
+Failed to push a message because context is not initialized.
+2023-01-13 16:06:35,115|INFO|auto|_run_test|406:
+Testing Average Loss: 1.6372
+2023-01-13 16:06:35,117|INFO|auto|_run_test|407:
+Testing Correct Rate: 40.34
+2023-01-13 16:08:15,401|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:08:15,403|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:08:15,404|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:08:15,434|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:08:15,463|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:08:15,488|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:08:27,976|INFO|auto|push_log|519:
+Begin testing of epoch 0.
+2023-01-13 16:08:59,417|INFO|auto|push_log|519:
+Begin testing of epoch 0.
+2023-01-13 16:09:28,386|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:09:28,391|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:09:28,391|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:09:28,398|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:09:28,399|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:09:28,402|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:09:38,525|INFO|auto|push_log|519:
+Begin testing of epoch 0.
+2023-01-13 16:12:00,806|INFO|auto|_run_test|406:
+Testing Average Loss: 1.6372
+2023-01-13 16:12:00,807|INFO|auto|_run_test|407:
+Testing Correct Rate: 40.34
+2023-01-13 16:12:28,018|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:12:28,020|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:12:28,021|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:12:28,024|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:12:28,025|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:12:28,027|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:12:48,028|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:12:48,032|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:12:48,032|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:12:48,036|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:12:48,037|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:12:48,039|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:12:53,359|INFO|auto|push_log|519:
+Begin testing of epoch 0.
+2023-01-13 16:14:50,293|INFO|auto|_run_test|406:
+Testing Average Loss: 2.5108
+2023-01-13 16:14:50,294|INFO|auto|_run_test|407:
+Testing Correct Rate: 7.39
+2023-01-13 16:17:08,401|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:17:08,404|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:17:08,405|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:17:08,409|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:17:08,410|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:17:08,412|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:19:17,328|INFO|auto|push_log|517:
+Begin training of epoch 1.
+2023-01-13 16:40:42,783|INFO|auto|push_log|517:
+Complete training of epoch 1.
+2023-01-13 16:40:42,797|INFO|auto|push_log|517:
+Begin validation of epoch 1.
+2023-01-13 16:41:42,701|INFO|auto|_run_validation|433:
+Validation Average Loss: 0.6985
+2023-01-13 16:41:42,701|INFO|auto|_run_validation|434:
+Validation Correct Rate: 77.20
+2023-01-13 16:41:42,704|INFO|auto|push_log|517:
+Validation result:
+avg_loss=0.6985
+correct_rate=77.20
+2023-01-13 16:41:42,748|INFO|auto|push_log|517:
+Validation result is better than last epoch.
+2023-01-13 16:41:42,750|INFO|auto|push_log|517:
+Begin training of epoch 2.
+2023-01-13 16:44:54,434|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:44:54,438|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:44:54,439|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:44:54,450|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:44:54,451|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:44:54,454|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:45:03,449|INFO|auto|push_log|517:
+Begin training of epoch 1.
+2023-01-13 16:45:03,810|INFO|auto|push_log|517:
+Complete training of epoch 1.
+2023-01-13 16:45:03,811|INFO|auto|push_log|517:
+Begin validation of epoch 1.
+2023-01-13 16:45:03,893|INFO|auto|_run_validation|433:
+Validation Average Loss: 4.1780
+2023-01-13 16:45:03,894|INFO|auto|_run_validation|434:
+Validation Correct Rate: 0.00
+2023-01-13 16:45:03,894|INFO|auto|push_log|517:
+Validation result:
+avg_loss=4.1780
+correct_rate=0.00
+2023-01-13 16:45:03,895|INFO|auto|push_log|517:
+Validation result gets worse for 1 consecutive times.
+2023-01-13 16:45:03,904|INFO|auto|push_log|517:
+Begin testing of epoch 1.
+2023-01-13 16:45:03,981|INFO|auto|_run_test|406:
+Testing Average Loss: 2.0183
+2023-01-13 16:45:03,982|INFO|auto|_run_test|407:
+Testing Correct Rate: 0.00
+2023-01-13 16:45:03,983|INFO|auto|push_log|517:
+Testing result:
+avg_loss=2.0183
+correct_rate=0.00
+2023-01-13 16:46:13,032|INFO|auto|push_log|517:
+Begin training of epoch 2.
+2023-01-13 16:46:13,374|INFO|auto|push_log|517:
+Complete training of epoch 2.
+2023-01-13 16:46:13,375|INFO|auto|push_log|517:
+Begin validation of epoch 2.
+2023-01-13 16:46:13,463|INFO|auto|_run_validation|433:
+Validation Average Loss: 4.0445
+2023-01-13 16:46:13,464|INFO|auto|_run_validation|434:
+Validation Correct Rate: 0.00
+2023-01-13 16:46:13,466|INFO|auto|push_log|517:
+Validation result:
+avg_loss=4.0445
+correct_rate=0.00
+2023-01-13 16:46:13,468|INFO|auto|push_log|517:
+Validation result gets worse for 2 consecutive times.
+2023-01-13 16:46:13,473|INFO|auto|push_log|517:
+Begin testing of epoch 2.
+2023-01-13 16:46:13,593|INFO|auto|_run_test|406:
+Testing Average Loss: 2.0985
+2023-01-13 16:46:13,594|INFO|auto|_run_test|407:
+Testing Correct Rate: 0.00
+2023-01-13 16:46:13,595|INFO|auto|push_log|517:
+Testing result:
+avg_loss=2.0985
+correct_rate=0.00
+2023-01-13 16:46:52,945|INFO|auto|push_log|517:
+Begin training of epoch 3.
+2023-01-13 16:46:53,316|INFO|auto|push_log|517:
+Complete training of epoch 3.
+2023-01-13 16:46:53,317|INFO|auto|push_log|517:
+Begin validation of epoch 3.
+2023-01-13 16:46:53,402|INFO|auto|_run_validation|433:
+Validation Average Loss: 3.9899
+2023-01-13 16:46:53,403|INFO|auto|_run_validation|434:
+Validation Correct Rate: 0.00
+2023-01-13 16:46:53,404|INFO|auto|push_log|517:
+Validation result:
+avg_loss=3.9899
+correct_rate=0.00
+2023-01-13 16:46:53,404|INFO|auto|push_log|517:
+Validation result gets worse for 3 consecutive times.
+2023-01-13 16:46:53,408|INFO|auto|push_log|517:
+Begin testing of epoch 3.
+2023-01-13 16:46:53,489|INFO|auto|_run_test|406:
+Testing Average Loss: 2.1242
+2023-01-13 16:46:53,489|INFO|auto|_run_test|407:
+Testing Correct Rate: 0.00
+2023-01-13 16:46:53,490|INFO|auto|push_log|517:
+Testing result:
+avg_loss=2.1242
+correct_rate=0.00
+2023-01-13 16:46:59,653|INFO|pretrained|from_pretrained|34:
+Loading resouce from: `res/auto_model_local/`.
+2023-01-13 16:46:59,655|DEBUG|pretrained|_load_model_obj|140:
+config.entry_file='auto.py'
+2023-01-13 16:46:59,656|DEBUG|pretrained|_load_model_obj|141:
+model_file='res/auto_model_local/auto.py'
+2023-01-13 16:46:59,674|DEBUG|pretrained|_load_model_obj|143:
+module=<module 'auto' from '/Users/huangyichun/workspace-python/alphafed/src/alphafed/docs/tutorial/res/auto_model_local/auto.py'>
+2023-01-13 16:46:59,674|DEBUG|pretrained|_load_model_obj|145:
+model_class=<class 'auto.AutoResNet'>
+2023-01-13 16:46:59,678|INFO|pretrained|_load_model_obj|147:
+Loading pretrained model complete.
+2023-01-13 16:47:05,139|INFO|auto|push_log|520:
+Begin testing of epoch 0.
+2023-01-13 16:47:09,744|INFO|auto|push_log|518:
+Begin training of epoch 1.
+2023-01-13 16:47:10,141|INFO|auto|push_log|518:
+Complete training of epoch 1.
+2023-01-13 16:47:10,142|INFO|auto|push_log|518:
+Begin validation of epoch 1.
+2023-01-13 16:47:10,235|INFO|auto|_run_validation|433:
+Validation Average Loss: 4.1812
+2023-01-13 16:47:10,236|INFO|auto|_run_validation|434:
+Validation Correct Rate: 0.00
+2023-01-13 16:47:10,237|INFO|auto|push_log|518:
+Validation result:
+avg_loss=4.1812
+correct_rate=0.00
+2023-01-13 16:47:10,237|INFO|auto|push_log|518:
+Validation result gets worse for 1 consecutive times.
+2023-01-13 16:47:10,240|INFO|auto|push_log|518:
+Begin testing of epoch 1.
+2023-01-13 16:47:10,323|INFO|auto|_run_test|406:
+Testing Average Loss: 1.9374
+2023-01-13 16:47:10,323|INFO|auto|_run_test|407:
+Testing Correct Rate: 0.00
+2023-01-13 16:47:10,324|INFO|auto|push_log|518:
+Testing result:
+avg_loss=1.9374
+correct_rate=0.00
+2023-01-13 16:47:27,214|INFO|auto|push_log|518:
+Begin training of epoch 1.
+2023-01-13 16:47:27,743|INFO|auto|push_log|518:
+Complete training of epoch 1.
+2023-01-13 16:47:27,743|INFO|auto|push_log|518:
+Begin validation of epoch 1.
+2023-01-13 16:47:27,820|INFO|auto|_run_validation|433:
+Validation Average Loss: 4.0594
+2023-01-13 16:47:27,822|INFO|auto|_run_validation|434:
+Validation Correct Rate: 0.00
+2023-01-13 16:47:27,823|INFO|auto|push_log|518:
+Validation result:
+avg_loss=4.0594
+correct_rate=0.00
+2023-01-13 16:47:27,841|INFO|auto|push_log|518:
+Validation result gets worse for 2 consecutive times.
+2023-01-13 16:47:27,844|INFO|auto|push_log|518:
+Begin testing of epoch 1.
+2023-01-13 16:47:27,924|INFO|auto|_run_test|406:
+Testing Average Loss: 2.0831
+2023-01-13 16:47:27,924|INFO|auto|_run_test|407:
+Testing Correct Rate: 0.00
+2023-01-13 16:47:27,925|INFO|auto|push_log|518:
+Testing result:
+avg_loss=2.0831
+correct_rate=0.00
