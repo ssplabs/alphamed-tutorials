@@ -1,0 +1,4 @@
+# 以下依赖仅用于展示示例，并非实际需要
+pytz==2021.1
+diskcache
+xmltodict>=0.13
